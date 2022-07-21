@@ -1,1 +1,1 @@
-# genetic_algorithm_multidimensional_knapsack_
+# Multidimensional Knapsack - Genetic Algorithm
