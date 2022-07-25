@@ -1,6 +1,6 @@
-import time
+import random
 import logging
-from typing import Callable, List
+from typing import List, Tuple
 import matplotlib.pyplot as plt
 
 import numpy as np
@@ -30,7 +30,8 @@ class GeneticAlgorithm:
         max_weigths: List[int],
         selection: str,
         k: Optional,
-        repair: str
+        repair: str,
+        num_parents_last_gen: int
     ):
 
         self.num_generations = num_generations
@@ -47,6 +48,7 @@ class GeneticAlgorithm:
         self.selection = selection
         self.k = k
         self.repair = repair
+        self.num_parents_last_gen = num_parents_last_gen
 
 
     def init_individuals(self) -> None:
@@ -87,7 +89,7 @@ class GeneticAlgorithm:
         return weights
 
 
-    def get_individual_weights(self, individual) -> List[float]:
+    def get_individual_weights(self, individual: List[int]) -> List[float]:
         """
         Get constraints for one individual
         """
@@ -181,12 +183,11 @@ class GeneticAlgorithm:
         rand_num = np.random.uniform(0, np.max(fitness_cumulative_sum))
 
         selected_individual = np.argmax(fitness_cumulative_sum >= rand_num)
-        print(selected_individual)
 
         return selected_individual
 
 
-    def tournament_selection(self, k) -> int:
+    def tournament_selection(self, k: int) -> List[int]:
         choosen_individuals_indxs = np.random.choice(np.arange(self.population_size), k)
         choosen_individuals = self.individuals[choosen_individuals_indxs]
         solutions = np.repeat(self.coeficients[None,:], k, axis=0)*choosen_individuals
@@ -195,7 +196,7 @@ class GeneticAlgorithm:
         return choosen_individuals_indxs[np.argmax(solutions)]
 
 
-    def iterate(self) -> None:
+    def iterate(self) -> Tuple:
 
         self.init_individuals()
         if self.repair == "random":
@@ -210,6 +211,7 @@ class GeneticAlgorithm:
         for gen in tqdm.tqdm(range(self.num_generations)):
             # Gets best individual in its real representation (x, y)
             idx_best_fitness = np.argmax(fitness)
+            idx_best_fitness_sorted = np.flip(np.argsort(fitness))
 
             log.info(f"Generation: {gen+1}/{self.num_generations} | Avg Fitness: {np.round(np.mean(fitness), self.round_decimals)} | Best Fitness: {np.round(np.max(fitness), self.round_decimals)}")
             log.info(f"Best Cromossom: {''.join(list(map(str, self.individuals[idx_best_fitness].tolist())))}")
@@ -238,10 +240,10 @@ class GeneticAlgorithm:
             for offspring in offsprings:
                 mutated_offsprings.append(self.mutation(offspring, self.mutation_rate))
 
-            # N-1 offsprings + parent with the best fitness
-            rand_index_offsprings = np.random.randint(0, self.population_size)
-            del mutated_offsprings[rand_index_offsprings]
-            mutated_offsprings.append(self.individuals[idx_best_fitness])
+            # Remove M offsprings and adds M parents
+            random.shuffle(mutated_offsprings)
+            mutated_offsprings = mutated_offsprings[self.num_parents_last_gen:]
+            mutated_offsprings = np.concatenate((mutated_offsprings, self.individuals[idx_best_fitness_sorted[:self.num_parents_last_gen]]), axis=0)
 
             self.individuals = np.array(mutated_offsprings)
             if self.repair == "random":
@@ -250,3 +252,5 @@ class GeneticAlgorithm:
                 self.repair_benefit_cost()
 
             fitness = self.get_fitness()
+
+        return np.round(np.max(fitness), self.round_decimals), np.round(np.mean(fitness), self.round_decimals), ''.join(list(map(str, self.individuals[idx_best_fitness].tolist())))
