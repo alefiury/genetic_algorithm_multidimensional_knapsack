@@ -1,6 +1,6 @@
 genetic_algorithm:
-    num_generations: 1000
-    population_size: 1000
+    num_generations: 10
+    population_size: 10
     crossover_rate: 0.65
     mutation_rate: 0.05
     round_decimals: 6
@@ -10,7 +10,7 @@ genetic_algorithm:
     num_parents_last_gen: 1
 
 execution:
-    num_runs: 30
+    num_runs: 10
 
 log:
     output_path: "mknapcb1_results.txt"

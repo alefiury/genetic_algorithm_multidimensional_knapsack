@@ -5,7 +5,7 @@ import numpy as np
 from omegaconf import OmegaConf
 
 from utils.genetic_algorithm import GeneticAlgorithm
-from utils.utils import split_metadata, write_results, formatter_single
+from utils.utils import split_metadata, write_results, init_output_file, formatter_single
 
 # Logger
 log = logging.getLogger(__name__)
@@ -23,6 +23,8 @@ def main() -> None:
     args = parser.parse_args()
 
     cfg = OmegaConf.load(args.config_path)
+
+    init_output_file(output_file_path=cfg.log.output_path)
 
     problems = split_metadata(cfg.data.metadata_path)
 
@@ -42,13 +44,15 @@ def main() -> None:
 
         best_fitness_list = np.array(results)[:, 0].astype(float)
         mean_best_fitness = np.mean(best_fitness_list)
+        std_best_fitness = np.std(best_fitness_list)
         best_idx = np.argmax(best_fitness_list)
 
         write_results(
             problem_name=str(problem["num_constraints"]) + '.' + str(problem["num_variables"]) + '-' + str(idx),
-            best_fitness=results[best_idx][0],
             mean_best_fitness=mean_best_fitness,
+            std_best_fitness=std_best_fitness,
             best_individual=results[best_idx][1],
+            best_fitness=results[best_idx][0],
             output_file_path=cfg.log.output_path
         )
 

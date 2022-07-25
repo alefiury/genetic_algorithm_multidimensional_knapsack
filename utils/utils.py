@@ -98,7 +98,11 @@ def split_metadata(metadata_path: str) -> None:
 
     return problems_l
 
+def init_output_file(output_file_path: str) -> None:
+    with open(output_file_path, 'w') as out_file:
+        out_file.write("problem_name|mean_best_fitness|std_best_fitness|best_fitness|best_individual\n")
 
-def write_results(problem_name: str, best_fitness: int, mean_best_fitness: int, best_individual: List, output_file_path: str) -> None:
+
+def write_results(problem_name: str, mean_best_fitness: float, std_best_fitness: float, best_fitness: float, best_individual: List, output_file_path: str) -> None:
     with open(output_file_path, 'a') as out_file:
-        out_file.write(f"{problem_name}|{best_fitness}|{mean_best_fitness}|{best_individual}\n")
+        out_file.write(f"{problem_name}|{mean_best_fitness}|{std_best_fitness}|{best_fitness}|{best_individual}\n")
