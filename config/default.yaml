@@ -4,7 +4,6 @@ genetic_algorithm:
     crossover_rate: 0.65
     mutation_rate: 0.05
     round_decimals: 6
-    plot_individuals: true
     selection: "tournament" # tournament or roulette
     k: 10 # Number of individuals for the tournament selection
     repair: "cost_benefit" # random or cost_benefit
@@ -17,4 +16,4 @@ log:
     output_path: "mknapcb1_results.txt"
 
 data:
-    metadata_path: "/home/alefiury/Downloads/Instancias_Mochila_Multidimensional/Instancias Mochila Multidimensional/mknapcb1.txt"
+    metadata_path: "multidimensional_knapsack_instances/mknapcb1.txt"

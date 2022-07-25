@@ -22,7 +22,6 @@ class GeneticAlgorithm:
         crossover_rate: float,
         mutation_rate: float,
         round_decimals: int,
-        plot_individuals: bool,
         num_variables: int,
         num_constraints: int,
         coeficients: List[int],
@@ -41,7 +40,6 @@ class GeneticAlgorithm:
         self.crossover_rate = crossover_rate
         self.mutation_rate = mutation_rate
         self.round_decimals = round_decimals
-        self.plot_individuals = plot_individuals
         self.coeficients = coeficients
         self.constraints = constraints
         self.max_weigths = max_weigths
