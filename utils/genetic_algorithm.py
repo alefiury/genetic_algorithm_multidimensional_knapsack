@@ -3,9 +3,10 @@ import logging
 from typing import List, Tuple
 import matplotlib.pyplot as plt
 
+import tqdm
+import wandb
 import numpy as np
 from pyparsing import Optional
-import tqdm
 
 from utils.utils import formatter_single
 
@@ -199,7 +200,7 @@ class GeneticAlgorithm:
         self.init_individuals()
         if self.repair == "random":
             self.repair_random()
-        elif self.repair == "cost_benefit":
+        elif self.repair == "cost_benefit" or self.repair == "hybrid":
             self.repair_benefit_cost()
         else:
             log.info("This repair technique does not exist...")
@@ -248,7 +249,21 @@ class GeneticAlgorithm:
                 self.repair_random()
             elif self.repair == "cost_benefit":
                 self.repair_benefit_cost()
+            elif self.repair == "hybrid":
+                if gen > self.num_generations*0.5:
+                    self.repair_benefit_cost()
+                else:
+                    self.repair_random()
 
             fitness = self.get_fitness()
+
+            wandb.log(
+                {
+                    "generation": gen,
+                    "best_fitness": np.max(fitness),
+                    "avg_fitness": np.mean(fitness),
+                    "best_individual": ''.join(list(map(str, self.individuals[idx_best_fitness].tolist())))
+                }
+            )
 
         return np.round(np.max(fitness), self.round_decimals), np.round(np.mean(fitness), self.round_decimals), ''.join(list(map(str, self.individuals[idx_best_fitness].tolist())))

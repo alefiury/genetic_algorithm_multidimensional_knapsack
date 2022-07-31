@@ -1,0 +1,11 @@
+executions:
+    num_runs: 30
+    num_problems: 1
+    config_paths: ["config/default1.yaml", "config/default2.yaml", "config/default3.yaml", "config/default4.yaml"]
+
+log:
+    log_base_dir: "./logs"
+    wandb_log: True
+
+data:
+    metadata_paths: [ "multidimensional_knapsack_instances/mknapcb1.txt", "multidimensional_knapsack_instances/mknapcb2.txt", "multidimensional_knapsack_instances/mknapcb3.txt", "multidimensional_knapsack_instances/mknapcb4.txt", "multidimensional_knapsack_instances/mknapcb5.txt", "multidimensional_knapsack_instances/mknapcb6.txt", "multidimensional_knapsack_instances/mknapcb7.txt", "multidimensional_knapsack_instances/mknapcb8.txt", "multidimensional_knapsack_instances/mknapcb9.txt"]

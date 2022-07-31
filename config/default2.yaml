@@ -1,0 +1,10 @@
+genetic_algorithm:
+    num_generations: 1000
+    population_size: 100
+    crossover_rate: 0.65
+    mutation_rate: 0.05
+    round_decimals: 6
+    selection: "roulette" # tournament or roulette
+    k: 15 # Number of individuals for the tournament selection
+    repair: "random" # random, cost_benefit or hybrid
+    num_parents_last_gen: 1
